@@ -9,11 +9,23 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const MONGO_URI = 'jacobogarcesoquendo:aFJzVMGN3o7fA38A@cluster0.mqwbn.mongodb.net/{yelianacampobarraza}'
+const MONGO_URI = 'jacobogarcesoquendo:aFJzVMGN3o7fA38A@cluster0.mqwbn.mongodb.net/yelianacampobarraza'
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log('Conectado a Atlas'))
     .catch(err => console.log('Error de conexión', err))
+
+
+//Endpoint
+app.post('/api/tareas', async (req, res) => {
+    try{
+        const nuevaTarea = new Tarea(req.body)
+        const tareaGuarda = await nuevaTarea.save();
+        res.status(201).json(tareaGuarda)
+    }catch(error){
+        res.status(400).json({message:error.message})
+    }
+})
 
 const PORT = 5000
 app.listen(PORT, () => console.log('Servidor escuchando en puerto 5000'))

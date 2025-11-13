@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const tareaSchena = new mongoose.Schena({
+const tareaSchema = new mongoose.Schema({
     titulo:{type:String, require: true},
     descripcion: {type:String},
     fechaCreacion: {type:Date, default:Date.now}
