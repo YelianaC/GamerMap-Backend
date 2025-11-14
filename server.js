@@ -1,31 +1,28 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import cors from 'cors'
-import tarea from './models/Tarea.js'
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import gameRoutes from './routes/gameRoutes.js';
+
+dotenv.config();
 
 const app = express()
-
-//configurando nuestro servidor para permitir
 app.use(cors())
-app.use(express.json())
+app.use(express.json());
+app.use("/games", gameRoutes);
 
-const MONGO_URI = 'jacobogarcesoquendo:aFJzVMGN3o7fA38A@cluster0.mqwbn.mongodb.net/yelianacampobarraza'
-
-mongoose.connect(MONGO_URI)
+//Conexión a Atlas
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Conectado a Atlas'))
     .catch(err => console.log('Error de conexión', err))
 
 
-//Endpoint
-app.post('/api/tareas', async (req, res) => {
-    try{
-        const nuevaTarea = new Tarea(req.body)
-        const tareaGuarda = await nuevaTarea.save();
-        res.status(201).json(tareaGuarda)
-    }catch(error){
-        res.status(400).json({message:error.message})
-    }
-})
+//Rutas de juegos
+app.use("/api/games", gameRoutes);
+
+app.get('/', (req, res) => {
+    res.send('Backend funcionando');
+    });
 
 const PORT = 5000
-app.listen(PORT, () => console.log('Servidor escuchando en puerto 5000'))
+app.listen(PORT, () => console.log('Servidor escuchando en puerto 5000'));
